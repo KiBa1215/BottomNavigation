@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="BottomNavigationView">
+        <attr name="enable_label" format="boolean"/>
+        <attr name="enable_icon" format="boolean"/>
+        <attr name="enable_badge" format="boolean"/>
+    </declare-styleable>
+</resources>
