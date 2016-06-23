@@ -194,8 +194,8 @@ public class BottomNavigationView extends LinearLayout {
      * set number to the badgeView by position
      * @param position current item position
      * @param number
-     *      if number == 0, The view will disappear. if number > 99, it will show '99+'.
-     *      if number < 0, it don't allow.
+     *      if number == 0, The view will disappear. if number &gt; 99, it will show '99+'.
+     *      if number &lt; 0, it don't allow.
      */
     public void setBadgeViewNumberByPosition(int position, int number){
         TextView badgeView = getBadgeViewByPosition(position);
@@ -236,7 +236,7 @@ public class BottomNavigationView extends LinearLayout {
 
     /**
      * Set navigation item click listener
-     * @param navigationItemSelectListener
+     * @param navigationItemSelectListener pass a new listener, not null.
      */
     public void setNavigationItemSelectListener(final OnNavigationItemSelectListener navigationItemSelectListener) {
         this.navigationItemSelectListener = navigationItemSelectListener;
