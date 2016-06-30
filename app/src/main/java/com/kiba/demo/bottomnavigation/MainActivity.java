@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
         btnSwitchIcon = (Button) findViewById(R.id.btn_switch_icon);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottomNavigationView);
 
-        BottomNavigationItem item1 = new BottomNavigationItem("label1", R.mipmap.ic_launcher, 0);
-        BottomNavigationItem item2 = new BottomNavigationItem("label2", R.mipmap.ic_launcher, 0);
-        BottomNavigationItem item3 = new BottomNavigationItem("label3", R.mipmap.ic_launcher, 0);
+        BottomNavigationItem item1 = new BottomNavigationItem("label1", R.mipmap.ic_launcher, android.R.drawable.sym_action_chat);
+        BottomNavigationItem item2 = new BottomNavigationItem("label2", R.mipmap.ic_launcher, android.R.drawable.sym_action_chat);
+        BottomNavigationItem item3 = new BottomNavigationItem("label3", R.mipmap.ic_launcher, android.R.drawable.sym_action_chat);
 
         final List<BottomNavigationItem> list = new ArrayList<>();
         list.add(item1);

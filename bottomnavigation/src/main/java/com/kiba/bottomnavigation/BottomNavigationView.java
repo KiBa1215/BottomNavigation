@@ -8,7 +8,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -33,6 +32,8 @@ public class BottomNavigationView extends LinearLayout {
     private boolean isIconEnable = true;
     private boolean isLabelEnable = true;
     private boolean isBadgeEnable = true;
+
+    private int currentPosition = -1;
 
     // click listener
     private OnNavigationItemSelectListener navigationItemSelectListener;
@@ -103,12 +104,14 @@ public class BottomNavigationView extends LinearLayout {
         if(this.items == null || this.items.isEmpty()){
             throw new Exception("The item list should not be null or empty.");
         }else{
+            // the item layouts should bu clear first
+            itemLayoutList.clear();
 
             int length = this.items.size();
             for (int i = 0; i < length; i++) {
 
                 View layout = LayoutInflater.from(this.context).inflate(R.layout.navigation_item_layout, this, false);
-                LinearLayout.LayoutParams lp = (LayoutParams) layout.getLayoutParams();
+                LayoutParams lp = (LayoutParams) layout.getLayoutParams();
                 lp.weight = 1;
 
                 TextView labelTextView =  (TextView)  layout.findViewById(R.id.navigation_item_textView_label);
@@ -120,7 +123,12 @@ public class BottomNavigationView extends LinearLayout {
                 // ICON
                 if(this.isIconEnable){
                     // set item icon
-                    iconImageView.setImageResource(item.getDrawableRes());
+                    iconImageView.setImageResource(item.getDefaultIcon());
+                    if(!this.isLabelEnable){
+                        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iconImageView.getLayoutParams();
+                        params.height = Utils.dip2px(this.context, 50);
+                        params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
+                    }
                 }else{
                     iconImageView.setVisibility(GONE);
                 }
@@ -245,14 +253,54 @@ public class BottomNavigationView extends LinearLayout {
         if(navigationItemSelectListener != null){
             for (int i = 0; i < itemLayoutList.size(); i++) {
                 final int position = i;
-                itemLayoutList.get(i).setOnClickListener(new OnClickListener() {
+                final View itemLayout = itemLayoutList.get(i);
+                itemLayout.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // set current position
+                        currentPosition = position;
+                        // set icon to default first
+                        resetIconToDefault(itemLayoutList);
+                        // set icon to active
+                        setIconToActive(itemLayout, position);
                         navigationItemSelectListener.onSelected(getBottomNavigationView(), view, position);
                     }
                 });
             }
         }
+    }
+
+    /**
+     * set icon to default icon after item clicked.
+     * @param layouts icon list
+     */
+    private void resetIconToDefault(List<View> layouts){
+        for (int i = 0; i < layouts.size(); i++) {
+            ImageView icon = (ImageView) layouts.get(i).findViewById(R.id.navigation_item_imageView_icon);
+            BottomNavigationItem item = this.items.get(i);
+            icon.setImageResource(item.getDefaultIcon());
+        }
+    }
+
+    /**
+     * set icon to default icon after item clicked.
+     * @param layout icon in which layout to be active
+     * @param position the item's index
+     */
+    private void setIconToActive(View layout, int position){
+        ImageView icon = (ImageView) layout.findViewById(R.id.navigation_item_imageView_icon);
+        BottomNavigationItem item = this.items.get(position);
+        icon.setImageResource(item.getAfterSelectedIcon());
+    }
+
+    /**
+     * Set current tab according to the position. <br/>
+     * If {@link OnNavigationItemSelectListener} has been set,
+     * the {@code onSelected()} will be called.
+     * @param position which item to switch to.
+     */
+    public void setTab(int position){
+        this.itemLayoutList.get(position).performClick();
     }
 
     private void playBadgeViewAnimation(TextView badgeView, BadgeStatus status){
@@ -279,6 +327,10 @@ public class BottomNavigationView extends LinearLayout {
         return isBadgeEnable;
     }
 
+    /**
+     * This operation will redraw the layout
+     * @param iconEnable true to enable icon, false to disable icon
+     */
     public void setIconEnable(boolean iconEnable) {
         if(this.isIconEnable != iconEnable){
             isIconEnable = iconEnable;
@@ -286,6 +338,10 @@ public class BottomNavigationView extends LinearLayout {
         }
     }
 
+    /**
+     * This operation will redraw the layout
+     * @param labelEnable true to enable label, false to disable label
+     */
     public void setLabelEnable(boolean labelEnable) {
         if(this.isLabelEnable != labelEnable){
             isLabelEnable = labelEnable;
@@ -293,6 +349,10 @@ public class BottomNavigationView extends LinearLayout {
         }
     }
 
+    /**
+     * This operation will redraw the layout
+     * @param badgeEnable true to enable badge, false to disable badge
+     */
     public void setBadgeEnable(boolean badgeEnable) {
         if(this.isBadgeEnable() != badgeEnable){
             isBadgeEnable = badgeEnable;
@@ -311,5 +371,33 @@ public class BottomNavigationView extends LinearLayout {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Replace the bottom navigation item.
+     * @param item a new item to replace
+     * @param position the index of item to be replaced
+     */
+    public void replaceNavigationItems(BottomNavigationItem item, int position){
+        if(isIconEnable){
+            ImageView icon = (ImageView) itemLayoutList.get(position).findViewById(R.id.navigation_item_imageView_icon);
+            this.items.remove(position);
+            this.items.add(position, item);
+            if(currentPosition == position){
+                icon.setImageResource(item.getAfterSelectedIcon());
+            }else{
+                icon.setImageResource(item.getDefaultIcon());
+            }
+        }else{
+            try {
+                throw new Exception("The icon is disabled.");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
     }
 }

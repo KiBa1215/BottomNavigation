@@ -7,15 +7,22 @@ public class BottomNavigationItem {
 
     private String label;
 
-    private int drawableRes;
+    private int defaultIcon;
+
+    private int afterSelectedIcon;
     // TODO: 2016/6/22 color to do. 
     private int color;
 
     private int badgeNumber = -1;
 
-    public BottomNavigationItem(String label, int drawable, int color) {
+    public BottomNavigationItem(String label, int defaultIcon, int afterSelectedIcon) {
+        this(label, defaultIcon, afterSelectedIcon, 0);
+    }
+
+    public BottomNavigationItem(String label, int defaultIcon, int afterSelectedIcon, int color) {
         this.label = label;
-        this.drawableRes = drawable;
+        this.defaultIcon = defaultIcon;
+        this.afterSelectedIcon = afterSelectedIcon;
         this.color = color;
     }
 
@@ -27,12 +34,20 @@ public class BottomNavigationItem {
         this.label = label;
     }
 
-    public int getDrawableRes() {
-        return drawableRes;
+    public int getDefaultIcon() {
+        return defaultIcon;
     }
 
-    public void setDrawableRes(int res) {
-        this.drawableRes = res;
+    public void setDefaultIcon(int defaultIcon) {
+        this.defaultIcon = defaultIcon;
+    }
+
+    public int getAfterSelectedIcon() {
+        return afterSelectedIcon;
+    }
+
+    public void setAfterSelectedIcon(int afterSelectedIcon) {
+        this.afterSelectedIcon = afterSelectedIcon;
     }
 
     public int getColor() {
