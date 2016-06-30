@@ -4,7 +4,7 @@ An bottom navigation for android, label, icon and badge supported.
 ![image](/demo.gif)
 
 ## Gradle
-    compile 'com.kiba:bottomnavigation:0.1.1'
+    compile 'com.kiba:bottomnavigation:0.2.0'
     
 ## Usage
 ```xml
