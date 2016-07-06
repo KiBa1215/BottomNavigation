@@ -4,5 +4,8 @@
         <attr name="enable_label" format="boolean"/>
         <attr name="enable_icon" format="boolean"/>
         <attr name="enable_badge" format="boolean"/>
+        <attr name="label_color_before" format="color"/>
+        <attr name="label_color_after" format="color"/>
+        <attr name="label_textSize" format="dimension"/>
     </declare-styleable>
 </resources>

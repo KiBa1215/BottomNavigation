@@ -2,6 +2,7 @@ package com.kiba.bottomnavigation;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
@@ -33,7 +34,13 @@ public class BottomNavigationView extends LinearLayout {
     private boolean isLabelEnable = true;
     private boolean isBadgeEnable = true;
 
-    private int currentPosition = -1;
+    // label color before selected default---YELLOW
+    private int labelColorBefore = 0;
+    // label color after selected default---GREEN
+    private int labelColorAfter = 0;
+    // label text size  default---12sp
+    private float labelTextSize = 0f;
+    private int currentPosition = 0;
 
     // click listener
     private OnNavigationItemSelectListener navigationItemSelectListener;
@@ -54,6 +61,9 @@ public class BottomNavigationView extends LinearLayout {
         this.isIconEnable = arr.getBoolean(R.styleable.BottomNavigationView_enable_icon, true);
         this.isLabelEnable = arr.getBoolean(R.styleable.BottomNavigationView_enable_label, true);
         this.isBadgeEnable = arr.getBoolean(R.styleable.BottomNavigationView_enable_badge, true);
+        this.labelColorBefore = arr.getColor(R.styleable.BottomNavigationView_label_color_before, Color.YELLOW);
+        this.labelColorAfter = arr.getColor(R.styleable.BottomNavigationView_label_color_after, Color.GREEN);
+        this.labelTextSize = arr.getDimension(R.styleable.BottomNavigationView_label_textSize, 12);
         arr.recycle();
         itemLayoutList = new ArrayList<>();
     }
@@ -111,7 +121,7 @@ public class BottomNavigationView extends LinearLayout {
             for (int i = 0; i < length; i++) {
 
                 View layout = LayoutInflater.from(this.context).inflate(R.layout.navigation_item_layout, this, false);
-                LayoutParams lp = (LayoutParams) layout.getLayoutParams();
+                LinearLayout.LayoutParams lp = (LayoutParams) layout.getLayoutParams();
                 lp.weight = 1;
 
                 TextView labelTextView =  (TextView)  layout.findViewById(R.id.navigation_item_textView_label);
@@ -126,7 +136,7 @@ public class BottomNavigationView extends LinearLayout {
                     iconImageView.setImageResource(item.getDefaultIcon());
                     if(!this.isLabelEnable){
                         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iconImageView.getLayoutParams();
-                        params.height = Utils.dip2px(this.context, 50);
+                        params.height = Utils.dip2px(this.context, 48);
                         params.width = RelativeLayout.LayoutParams.WRAP_CONTENT;
                     }
                 }else{
@@ -141,6 +151,9 @@ public class BottomNavigationView extends LinearLayout {
                     }
                     // set item label
                     labelTextView.setText(item.getLabel());
+                    labelTextView.setTextColor(this.labelColorBefore);
+                    float textSize = Utils.px2sp(this.context, this.labelTextSize);
+                    labelTextView.setTextSize(textSize);
                 }else{
                     labelTextView.setVisibility(GONE);
                 }
@@ -257,13 +270,14 @@ public class BottomNavigationView extends LinearLayout {
                 itemLayout.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // set item to default first
+                        resetActiveItemToDefault(itemLayoutList, currentPosition);
                         // set current position
                         currentPosition = position;
-                        // set icon to default first
-                        resetIconToDefault(itemLayoutList);
-                        // set icon to active
-                        setIconToActive(itemLayout, position);
+                        // set item to active
+                        setItemToActive(itemLayout, currentPosition);
                         navigationItemSelectListener.onSelected(getBottomNavigationView(), view, position);
+
                     }
                 });
             }
@@ -271,20 +285,57 @@ public class BottomNavigationView extends LinearLayout {
     }
 
     /**
-     * set icon to default icon after item clicked.
-     * @param layouts icon list
+     * reset item to default
+     * @param layouts layout list
+     * @param position the position to be reset
      */
-    private void resetIconToDefault(List<View> layouts){
-        for (int i = 0; i < layouts.size(); i++) {
-            ImageView icon = (ImageView) layouts.get(i).findViewById(R.id.navigation_item_imageView_icon);
-            BottomNavigationItem item = this.items.get(i);
-            icon.setImageResource(item.getDefaultIcon());
+    private void resetActiveItemToDefault(List<View> layouts, int position){
+        if(isIconEnable()){
+            resetIconToDefault(layouts, position);
+        }
+        if(isLabelEnable()){
+            resetLabelToDefault(layouts, position);
+        }
+    }
+
+    /**
+     * reset item to active
+     * @param layout item in which layout to be activated.
+     * @param position the item's index
+     */
+    private void setItemToActive(View layout, int position){
+        if(isIconEnable()){
+            setIconToActive(layout, position);
+        }
+        if(isLabelEnable()){
+            setLabelToActive(layout, position);
         }
     }
 
     /**
      * set icon to default icon after item clicked.
-     * @param layout icon in which layout to be active
+     * @param layouts layout list
+     * @param position the position to be reset
+     */
+    private void resetIconToDefault(List<View> layouts, int position) {
+        ImageView icon = (ImageView) layouts.get(position).findViewById(R.id.navigation_item_imageView_icon);
+        BottomNavigationItem item = this.items.get(position);
+        icon.setImageResource(item.getDefaultIcon());
+    }
+
+    /**
+     * set label color to default after item clicked.
+     * @param layouts layout list
+     * @param position the position to be reset
+     */
+    private void resetLabelToDefault(List<View> layouts, int position) {
+        TextView label = (TextView) layouts.get(position).findViewById(R.id.navigation_item_textView_label);
+        label.setTextColor(this.labelColorBefore);
+    }
+
+    /**
+     * set icon to default icon after item clicked.
+     * @param layout icon in which layout to be activated
      * @param position the item's index
      */
     private void setIconToActive(View layout, int position){
@@ -294,7 +345,17 @@ public class BottomNavigationView extends LinearLayout {
     }
 
     /**
-     * Set current tab according to the position. <br/>
+     * set label to default icon after item clicked.
+     * @param layout label in which layout to be active
+     * @param position the item's index
+     */
+    private void setLabelToActive(View layout, int position){
+        TextView label = (TextView) layout.findViewById(R.id.navigation_item_textView_label);
+        label.setTextColor(this.labelColorAfter);
+    }
+
+    /**
+     * Set current tab according to the position.
      * If {@link OnNavigationItemSelectListener} has been set,
      * the {@code onSelected()} will be called.
      * @param position which item to switch to.

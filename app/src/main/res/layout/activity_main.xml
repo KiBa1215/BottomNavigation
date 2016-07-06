@@ -32,6 +32,9 @@
         app:enable_label="true"
         app:enable_icon="true"
         app:enable_badge="true"
+        app:label_textSize="12sp"
+        app:label_color_before="@color/colorPrimaryDark"
+        app:label_color_after="@color/colorAccent"
         android:background="#567890"
         android:minHeight="?attr/actionBarSize"/>
 </android.support.design.widget.CoordinatorLayout>

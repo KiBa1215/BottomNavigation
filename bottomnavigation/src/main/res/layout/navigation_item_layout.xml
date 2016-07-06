@@ -11,8 +11,8 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="3dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="2dp"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true" />
 
@@ -20,27 +20,25 @@
         android:id="@+id/navigation_item_textView_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
         android:layout_below="@+id/navigation_item_imageView_icon"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="2dp"
         tools:text="text"
-        android:paddingBottom="5dp"/>
+        android:paddingBottom="2dp"/>
     
     <TextView
         android:id="@+id/navigation_item_textView_badge"
-        android:layout_width="14dp"
-        android:layout_height="14dp"
-        android:layout_toRightOf="@+id/navigation_item_imageView_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
         android:background="@drawable/navigation_badge_background"
-        android:layout_marginTop="3dp"
-        android:layout_marginLeft="-5dp"
         android:textColor="@color/navigation_badge_text_color"
         android:gravity="center"
         tools:text="12"
-        android:text="12"
-        android:textSize="10sp"
+        android:textSize="12sp"
         android:textStyle="bold"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="4dp"
         android:visibility="invisible"/>
 
 </RelativeLayout>
