@@ -4,15 +4,16 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
+import com.kiba.bottomnavigation.entity.BadgeView;
+import com.kiba.bottomnavigation.entity.IconView;
+import com.kiba.bottomnavigation.entity.LabelView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +23,6 @@ import java.util.List;
  */
 public class BottomNavigationView extends LinearLayout {
 
-    // TODO: 2016/6/22 create BadgeView or LabelView or IconView?  &&  show and hide navigation?
     private Context context;
 
     private List<BottomNavigationItem> items;
@@ -124,9 +124,9 @@ public class BottomNavigationView extends LinearLayout {
                 LinearLayout.LayoutParams lp = (LayoutParams) layout.getLayoutParams();
                 lp.weight = 1;
 
-                TextView labelTextView =  (TextView)  layout.findViewById(R.id.navigation_item_textView_label);
-                TextView badgeTextView =  (TextView)  layout.findViewById(R.id.navigation_item_textView_badge);
-                ImageView iconImageView = (ImageView) layout.findViewById(R.id.navigation_item_imageView_icon);
+                LabelView labelTextView =  (LabelView) layout.findViewById(R.id.navigation_item_labelView);
+                BadgeView badgeTextView =  (BadgeView) layout.findViewById(R.id.navigation_item_badgeView);
+                IconView iconImageView = (IconView) layout.findViewById(R.id.navigation_item_iconView);
 
                 BottomNavigationItem item = this.items.get(i);
 
@@ -163,7 +163,7 @@ public class BottomNavigationView extends LinearLayout {
                     if(!this.isIconEnable){
                         // set layout params if the icon is disabled.
                         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) badgeTextView.getLayoutParams();
-                        params.addRule(RelativeLayout.RIGHT_OF, R.id.navigation_item_textView_label);
+                        params.addRule(RelativeLayout.RIGHT_OF, R.id.navigation_item_labelView);
                         params.leftMargin = Utils.dip2px(this.context, 0f);
                     }
                     // set item badge
@@ -187,25 +187,25 @@ public class BottomNavigationView extends LinearLayout {
         }
     }
 
-    public TextView getLabelViewByPosition(int position){
+    public LabelView getLabelViewByPosition(int position){
         if(isLabelEnable()){
-            return (TextView) getItemView(position).findViewById(R.id.navigation_item_textView_label);
+            return (LabelView) getItemView(position).findViewById(R.id.navigation_item_labelView);
         }else{
             return null;
         }
     }
 
-    public ImageView getIconViewByPosition(int position){
+    public IconView getIconViewByPosition(int position){
         if(isIconEnable()){
-            return (ImageView) getItemView(position).findViewById(R.id.navigation_item_imageView_icon);
+            return (IconView) getItemView(position).findViewById(R.id.navigation_item_iconView);
         }else{
             return null;
         }
     }
 
-    public TextView getBadgeViewByPosition(int position){
+    public BadgeView getBadgeViewByPosition(int position){
         if(isBadgeEnable()){
-            return (TextView) getItemView(position).findViewById(R.id.navigation_item_textView_badge);
+            return (BadgeView) getItemView(position).findViewById(R.id.navigation_item_badgeView);
         }else{
             return null;
         }
@@ -219,7 +219,7 @@ public class BottomNavigationView extends LinearLayout {
      *      if number &lt; 0, it don't allow.
      */
     public void setBadgeViewNumberByPosition(int position, int number){
-        TextView badgeView = getBadgeViewByPosition(position);
+        BadgeView badgeView = getBadgeViewByPosition(position);
         if(badgeView == null){
             try {
                 throw new Exception("Badge is not enabled.");
@@ -251,7 +251,7 @@ public class BottomNavigationView extends LinearLayout {
         }
     }
 
-    public boolean isBadgeShowing(TextView badgeView){
+    public boolean isBadgeShowing(BadgeView badgeView){
         return badgeView.getVisibility() == VISIBLE;
     }
 
@@ -318,7 +318,7 @@ public class BottomNavigationView extends LinearLayout {
      * @param position the position to be reset
      */
     private void resetIconToDefault(List<View> layouts, int position) {
-        ImageView icon = (ImageView) layouts.get(position).findViewById(R.id.navigation_item_imageView_icon);
+        IconView icon = (IconView) layouts.get(position).findViewById(R.id.navigation_item_iconView);
         BottomNavigationItem item = this.items.get(position);
         icon.setImageResource(item.getDefaultIcon());
     }
@@ -329,7 +329,7 @@ public class BottomNavigationView extends LinearLayout {
      * @param position the position to be reset
      */
     private void resetLabelToDefault(List<View> layouts, int position) {
-        TextView label = (TextView) layouts.get(position).findViewById(R.id.navigation_item_textView_label);
+        LabelView label = (LabelView) layouts.get(position).findViewById(R.id.navigation_item_labelView);
         label.setTextColor(this.labelColorBefore);
     }
 
@@ -339,7 +339,7 @@ public class BottomNavigationView extends LinearLayout {
      * @param position the item's index
      */
     private void setIconToActive(View layout, int position){
-        ImageView icon = (ImageView) layout.findViewById(R.id.navigation_item_imageView_icon);
+        IconView icon = (IconView) layout.findViewById(R.id.navigation_item_iconView);
         BottomNavigationItem item = this.items.get(position);
         icon.setImageResource(item.getAfterSelectedIcon());
     }
@@ -350,7 +350,7 @@ public class BottomNavigationView extends LinearLayout {
      * @param position the item's index
      */
     private void setLabelToActive(View layout, int position){
-        TextView label = (TextView) layout.findViewById(R.id.navigation_item_textView_label);
+        LabelView label = (LabelView) layout.findViewById(R.id.navigation_item_labelView);
         label.setTextColor(this.labelColorAfter);
     }
 
@@ -364,7 +364,7 @@ public class BottomNavigationView extends LinearLayout {
         this.itemLayoutList.get(position).performClick();
     }
 
-    private void playBadgeViewAnimation(TextView badgeView, BadgeStatus status){
+    private void playBadgeViewAnimation(BadgeView badgeView, BadgeStatus status){
         if (BadgeStatus.SHOW == status){
             badgeView.startAnimation(AnimationUtils.loadAnimation(this.context, R.anim.scale_in));
         }else if(BadgeStatus.DISMISS == status){
@@ -441,7 +441,7 @@ public class BottomNavigationView extends LinearLayout {
      */
     public void replaceNavigationItems(BottomNavigationItem item, int position){
         if(isIconEnable){
-            ImageView icon = (ImageView) itemLayoutList.get(position).findViewById(R.id.navigation_item_imageView_icon);
+            IconView icon = (IconView) itemLayoutList.get(position).findViewById(R.id.navigation_item_iconView);
             this.items.remove(position);
             this.items.add(position, item);
             if(currentPosition == position){

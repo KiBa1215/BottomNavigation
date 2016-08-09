@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/navigation_item_imageView_icon"
+    <com.kiba.bottomnavigation.entity.IconView
+        android:id="@+id/navigation_item_iconView"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_centerHorizontal="true"
@@ -16,18 +16,18 @@
         android:scaleType="fitCenter"
         android:adjustViewBounds="true" />
 
-    <TextView
-        android:id="@+id/navigation_item_textView_label"
+    <com.kiba.bottomnavigation.entity.LabelView
+        android:id="@+id/navigation_item_labelView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/navigation_item_imageView_icon"
+        android:layout_below="@+id/navigation_item_iconView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="2dp"
         tools:text="text"
         android:paddingBottom="2dp"/>
     
-    <TextView
-        android:id="@+id/navigation_item_textView_badge"
+    <com.kiba.bottomnavigation.entity.BadgeView
+        android:id="@+id/navigation_item_badgeView"
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:background="@drawable/navigation_badge_background"
